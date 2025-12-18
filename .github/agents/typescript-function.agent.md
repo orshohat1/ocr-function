@@ -108,3 +108,34 @@ if (!input.isValid) {
 - Queue & Service Bus consumers with poison handling
 - Blob-triggered processing pipelines
 - Durable Functions orchestrations
+
+## Deployment Best Practices (Azure CLI)
+
+This section provides concise, practical deployment best practices for deploying Azure Function Apps using the Azure CLI. Follow these steps to create repeatable, secure, and observable deployments from local or CI/CD environments.
+
+- **Use infrastructure-as-code:** Define resources with Bicep or ARM templates and deploy them via `az deployment group create` to ensure reproducible environments.
+- **Use resource groups per environment:** Group staging/production resources separately to avoid accidental cross-environment changes.
+- **Prefer managed identities:** Assign a system-assigned or user-assigned Managed Identity to the Function App and grant least-privilege RBAC to other Azure resources (Key Vault, Storage, Cosmos DB).
+- **Store secrets in Key Vault:** Do not store secrets in app settings; reference Key Vault secrets via `az functionapp identity assign` and configuration settings or use Key Vault references.
+- **Deploy from build artifacts:** Build locally or in CI, package the function app as a zip, and deploy the artifact with `az functionapp deployment source config-zip --src <artifact.zip>` for deterministic deployments.
+- **Use App Service plan appropriate for workload:** Choose Consumption, Premium, or App Service Plan based on cold-start, VNET, and scaling needs.
+- **Set runtime and Node version explicitly:** Use `az functionapp create --runtime node --runtime-version 18` or equivalent Bicep settings to avoid runtime drift.
+- **Protect inbound traffic:** Use function-level auth (Easy Auth), Access Restrictions, or Azure AD to protect HTTP endpoints; avoid exposing management endpoints.
+- **Perform post-deploy validation:** Run healthchecks, integration tests, and verify metrics/alerts in Application Insights.
+- **Monitor and alert on failures:** Configure Alerts for function errors, high cold-starts, or throttling and export logs to a central workspace when needed.
+
+Example minimal Azure CLI deployment snippet (build + zip deploy):
+
+```bash
+# build TypeScript project
+npm ci
+npm run build
+
+# create zip artifact
+cd dist && zip -r ../functionapp.zip . && cd -
+
+# deploy artifact
+az functionapp deployment source config-zip --resource-group my-rg --name my-func-app --src functionapp.zip
+```
+
+Follow your IaC pattern to make deployments repeatable and auditable.
