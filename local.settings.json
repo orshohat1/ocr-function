@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "SourceStorageConnection__blobServiceUri": "https://bloblogictest.blob.core.windows.net/",
+    "CONTENT_UNDERSTANDING_ENDPOINT": "https://gal3729-resource.cognitiveservices.azure.com/",
+    "SOURCE_STORAGE_ACCOUNT": "bloblogictest",
+    "SOURCE_CONTAINER": "test",
+    "CONTENT_UNDERSTANDING_PROJECT": "function-to-content"
+  }
+}
