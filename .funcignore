@@ -1,0 +1,11 @@
+*.js.map
+*.ts
+.git*
+.vscode
+local.settings.json
+test
+tsconfig.json
+.bicep-planning-files
+infra
+.github
+node_modules
